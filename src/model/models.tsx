@@ -27,11 +27,15 @@ export interface TBreadcrumItem {
     exportValue: string,
     showChildren: boolean,
     editMode: boolean,
-    children: TBreadcrumItem[]
+    children: TBreadcrumItem[],
 }
 
-export interface DropdownProps {
-    name: string
-    childNodes: TBreadcrumItem[],
-    addBreadcrumItem(item: TBreadcrumItem): any 
+export interface ComponentProps {
+    name?: string
+    childNodes?: TBreadcrumItem[],
+    addBreadcrumItem?: (item: TBreadcrumItem) => any | {}
+}
+
+export interface SearchValue {
+    [key: string]: string
 }
