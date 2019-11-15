@@ -7,13 +7,6 @@ import Select from 'react-select';
 import { getOptionValue } from 'react-select/src/builtins';
 
 
-
-const initiComponentProps = {
-  name: '',
-  childNodes: [],
-  addBreadcrumItem: ()=>{}
-}
-
 const SearchApp =(props: ComponentProps) => {
   let options = props.childNodes!.map((b: TBreadcrumItem)=>{
     return {
@@ -22,16 +15,15 @@ const SearchApp =(props: ComponentProps) => {
     }
   });
 
-  function getOp(ob: any) {
+  function getOp(ob: any):TBreadcrumItem {
     return props.childNodes!.filter((b: TBreadcrumItem)=> b.name == ob.label)[0];
   }
 
-  let p: TBreadcrumItem;
   return (
     <Select
       value={null}
       autoFocus
-      onChange={(e:any)=> console.log(getOp(e)) } 
+      onChange={(e:any)=> props.addBreadcrumItem(getOp(e)) } 
       options={options}
     />
   );
@@ -49,22 +41,23 @@ let buttonDropdownStyle =  {
   border: '0px',
 }
 
-const Dropdown = (props: ComponentProps = initiComponentProps) => {
-  const [dropdownOpen, setOpen] = useState(false);
-  const toggle = () => setOpen(!dropdownOpen);
+const Dropdown = (props: ComponentProps ) => {
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen(prevState => !prevState);
 
   return (
     <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}  >
       <DropdownToggle caret style={buttonDropdownStyle}>{props.name}</DropdownToggle>
       <DropdownMenu style={{width: '250px'}}> 
         {/* {
-          props.childNodes.map((item: TBreadcrumItem, index: number)=> {
+          props.childNodes!.map((item: TBreadcrumItem, index: number)=> {
             return(
               <DropdownItem key={index} onClick={()=>props.addBreadcrumItem(item)}> {item.name} </DropdownItem>
             );
           })
         } */}
-        <SearchApp {...props}/>
+        <SearchApp {...props} addBreadcrumItem = {(item: TBreadcrumItem)=> {toggle(); props.addBreadcrumItem(item)}} />
       </DropdownMenu>
     </ButtonDropdown>
   );
@@ -74,7 +67,7 @@ const Dropdown = (props: ComponentProps = initiComponentProps) => {
 
 const initialState: State = {
   posts: [],
-  breadcrumItems: [sampleData]
+  breadcrumItems: [sampleData],
 }
 
 class App extends React.Component<{}, State> {

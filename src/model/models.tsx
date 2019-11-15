@@ -7,7 +7,7 @@ export interface Post{
 
 export interface State {
     posts: Post[],
-    breadcrumItems: any
+    breadcrumItems: any,
 }
 
 export interface Response {
@@ -32,8 +32,8 @@ export interface TBreadcrumItem {
 
 export interface ComponentProps {
     name?: string
-    childNodes?: TBreadcrumItem[],
-    addBreadcrumItem?: (item: TBreadcrumItem) => any | {}
+    childNodes: TBreadcrumItem[],
+    addBreadcrumItem(item: TBreadcrumItem): any,
 }
 
 export interface SearchValue {
