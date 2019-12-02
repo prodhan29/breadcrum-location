@@ -1,31 +1,34 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import sampleData from './sample-data';
 import './App.css';
-import {State, TBreadcrumItem, ComponentProps, SearchValue} from './model/models';
+import { State, TBreadcrumItem, ComponentProps, SearchValue } from './model/models';
 import { Breadcrumb, BreadcrumbItem, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Select from 'react-select';
 import { getOptionValue } from 'react-select/src/builtins';
 
 
-const SearchApp =(props: ComponentProps) => {
-  let options = props.childNodes!.map((b: TBreadcrumItem)=>{
+const SearchApp = (props: ComponentProps) => {
+  let options = props.childNodes!.map((b: TBreadcrumItem) => {
     return {
       label: b.name,
       value: b
     }
   });
 
-  function getOp(ob: any):TBreadcrumItem {
-    return props.childNodes!.filter((b: TBreadcrumItem)=> b.name == ob.label)[0];
+  function getOp(ob: any): TBreadcrumItem {
+    return props.childNodes!.filter((b: TBreadcrumItem) => b.name == ob.label)[0];
   }
 
   return (
-    <Select
-      value={null}
-      autoFocus
-      onChange={(e:any)=> props.addBreadcrumItem(getOp(e)) } 
-      options={options}
-    />
+    <div>
+      <Select
+        value={null}
+        autoFocus
+        menuIsOpen
+        onChange={(e: any) => props.addBreadcrumItem(getOp(e))}
+        options={options}
+      />
+    </div>
   );
 }
 
@@ -35,13 +38,13 @@ const SearchApp =(props: ComponentProps) => {
 
 
 
-let buttonDropdownStyle =  {
+let buttonDropdownStyle = {
   backgroundColor: '#e9ecef',
   color: 'black',
   border: '0px',
 }
 
-const Dropdown = (props: ComponentProps ) => {
+const Dropdown = (props: ComponentProps) => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
@@ -49,15 +52,9 @@ const Dropdown = (props: ComponentProps ) => {
   return (
     <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}  >
       <DropdownToggle caret style={buttonDropdownStyle}>{props.name}</DropdownToggle>
-      <DropdownMenu style={{width: '250px'}}> 
-        {/* {
-          props.childNodes!.map((item: TBreadcrumItem, index: number)=> {
-            return(
-              <DropdownItem key={index} onClick={()=>props.addBreadcrumItem(item)}> {item.name} </DropdownItem>
-            );
-          })
-        } */}
-        <SearchApp {...props} addBreadcrumItem = {(item: TBreadcrumItem)=> {toggle(); props.addBreadcrumItem(item)}} />
+      <DropdownMenu style={{ width: '250px' }}>
+        <div> Change option  <a href="#"> Country </a> </div>
+        <SearchApp {...props} addBreadcrumItem={(item: TBreadcrumItem) => {toggle(); props.addBreadcrumItem(item) }} />
       </DropdownMenu>
     </ButtonDropdown>
   );
@@ -77,7 +74,7 @@ class App extends React.Component<{}, State> {
     this.state = initialState;
   }
 
-  addBreadcrumItem =(position: number, item: TBreadcrumItem): void => {
+  addBreadcrumItem = (position: number, item: TBreadcrumItem): void => {
     this.setState({
       ...this.state,
       breadcrumItems: [...this.state.breadcrumItems.splice(0, ++position), item]
@@ -85,17 +82,17 @@ class App extends React.Component<{}, State> {
   }
 
   render() {
-    return(
+    return (
       <div className="App">
-          <Breadcrumb>
+        <Breadcrumb>
           {
-            this.state.breadcrumItems.map((item:TBreadcrumItem, index: number)=> {
-              return(
-                <BreadcrumbItem key={index}> 
-                  <Dropdown 
-                    name = {item.name} 
-                    childNodes= {item.children}
-                    addBreadcrumItem = {(item: TBreadcrumItem)=> this.addBreadcrumItem(index, item)}/> 
+            this.state.breadcrumItems.map((item: TBreadcrumItem, index: number) => {
+              return (
+                <BreadcrumbItem key={index}>
+                  <Dropdown
+                    name={item.name}
+                    childNodes={item.children}
+                    addBreadcrumItem={(item: TBreadcrumItem) => this.addBreadcrumItem(index, item)} />
                 </BreadcrumbItem>
               )
             })
@@ -103,7 +100,7 @@ class App extends React.Component<{}, State> {
         </Breadcrumb>
       </div>
     );
-  } 
+  }
 }
 
 export default App;
