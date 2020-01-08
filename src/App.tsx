@@ -85,9 +85,10 @@ class App extends React.Component<{}, State> {
   }
 
   getChildren =(ob: any)=>{
+
+    if(ob.children === undefined) return [];
     let keys = Object.keys(ob.children);
     return keys.map((item:any, index: number)=>{
-
       return ob.children[item];
     })
   }
@@ -101,7 +102,7 @@ class App extends React.Component<{}, State> {
               return (
                 <BreadcrumbItem key={index}>
                   <Dropdown
-                    name={item.name}
+                    name={item.label}
                     childNodes={this.getChildren(item)}
                     addBreadcrumItem={(item: any) => this.addBreadcrumItem(index, item)} />
                 </BreadcrumbItem>
