@@ -49,7 +49,7 @@ export interface TBreadcrumItem2 {
 
 export interface ComponentProps {
   name?: string
-  childNodes: TBreadcrumItem[],
+  childNodes: any,
   addBreadcrumItem(item: TBreadcrumItem): any,
 }
 

@@ -7,17 +7,18 @@ import Select from 'react-select';
 import { getOptionValue } from 'react-select/src/builtins';
 
 
-const SearchApp = (props: ComponentProps) => {
-  let options = props.childNodes!.map((b: TBreadcrumItem) => {
+const SearchApp = (props: any) => {
+  let options = props.childNodes.map((b: any) => {
     return {
       label: b.name,
       value: b
     }
   });
 
-  function getOp(ob: any): TBreadcrumItem {
-    return props.childNodes!.filter((b: TBreadcrumItem) => b.name == ob.label)[0];
+  function getOp(ob: any): any {
+    return props.childNodes!.filter((b: any) => b.name == ob.label)[0];
   }
+
 
   return (
     <div>
@@ -44,7 +45,7 @@ let buttonDropdownStyle = {
   border: '0px',
 }
 
-const Dropdown = (props: ComponentProps) => {
+const Dropdown = (props: any) => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
@@ -54,7 +55,7 @@ const Dropdown = (props: ComponentProps) => {
       <DropdownToggle caret style={buttonDropdownStyle}>{props.name}</DropdownToggle>
       <DropdownMenu style={{ width: '250px' }}>
         <div> Change option  <a href="#"> Country </a> </div>
-        <SearchApp {...props} addBreadcrumItem={(item: TBreadcrumItem) => {toggle(); props.addBreadcrumItem(item) }} />
+        <SearchApp {...props} addBreadcrumItem={(item: any) => {toggle(); props.addBreadcrumItem(item) }} />
       </DropdownMenu>
     </ButtonDropdown>
   );
@@ -64,7 +65,7 @@ const Dropdown = (props: ComponentProps) => {
 
 const initialState: State = {
   posts: [],
-  breadcrumItems: [sampleData],
+  breadcrumItems: [sampleData.locations.locationsHierarchy.map["c768ef20-01fe-4877-b670-9b6570be17be"]],
 }
 
 class App extends React.Component<{}, State> {
@@ -74,10 +75,18 @@ class App extends React.Component<{}, State> {
     this.state = initialState;
   }
 
-  addBreadcrumItem = (position: number, item: TBreadcrumItem): void => {
+  addBreadcrumItem = (position: number, item: any): void => {
     this.setState({
       ...this.state,
       breadcrumItems: [...this.state.breadcrumItems.splice(0, ++position), item]
+    })
+  }
+
+  getChildren =(ob: any)=>{
+    let keys = Object.keys(ob.children);
+    return keys.map((item:any, index: number)=>{
+
+      return ob.children[item];
     })
   }
 
@@ -86,13 +95,13 @@ class App extends React.Component<{}, State> {
       <div className="App">
         <Breadcrumb>
           {
-            this.state.breadcrumItems.map((item: TBreadcrumItem, index: number) => {
+            this.state.breadcrumItems.map((item: any, index: number) => {
               return (
                 <BreadcrumbItem key={index}>
                   <Dropdown
                     name={item.name}
-                    childNodes={item.children}
-                    addBreadcrumItem={(item: TBreadcrumItem) => this.addBreadcrumItem(index, item)} />
+                    childNodes={this.getChildren(item)}
+                    addBreadcrumItem={(item: any) => this.addBreadcrumItem(index, item)} />
                 </BreadcrumbItem>
               )
             })
