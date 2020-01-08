@@ -10,7 +10,7 @@ import { getOptionValue } from 'react-select/src/builtins';
 const SearchApp = (props: any) => {
   let options = props.childNodes.map((b: any) => {
     return {
-      label: b.name,
+      label: b.label,
       value: b
     }
   });
@@ -26,7 +26,7 @@ const SearchApp = (props: any) => {
         value={null}
         autoFocus
         menuIsOpen
-        onChange={(e: any) => props.addBreadcrumItem(getOp(e))}
+        onChange={(e: any) => props.addBreadcrumItem(e.value)}
         options={options}
       />
     </div>
@@ -49,6 +49,8 @@ const Dropdown = (props: any) => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
+
+  console.log("childNodes: ",props.childNodes);
 
   return (
     <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}  >
