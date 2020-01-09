@@ -4,7 +4,6 @@ import './App.css';
 import { State, TBreadcrumItem, ComponentProps, SearchValue } from './model/models';
 import { Breadcrumb, BreadcrumbItem, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Select from 'react-select';
-import { getOptionValue } from 'react-select/src/builtins';
 
 
 const SearchApp = (props: any) => {
@@ -14,11 +13,6 @@ const SearchApp = (props: any) => {
       value: b
     }
   });
-
-  function getOp(ob: any): any {
-    return props.childNodes!.filter((b: any) => b.name == ob.label)[0];
-  }
-
 
   return (
     <div>
@@ -50,8 +44,6 @@ const Dropdown = (props: any) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
-  console.log("childNodes: ",props.childNodes);
-
   return (
     <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}  >
       <DropdownToggle caret style={buttonDropdownStyle}>{props.name}</DropdownToggle>
@@ -64,10 +56,15 @@ const Dropdown = (props: any) => {
 }
 
 
+const renameProperty =(ob: any = {}, oldKey: string = "", newKey: string = "")=> {
+  ob[newKey] = ob[oldKey];
+  delete ob[oldKey];
+  return ob;
+}
 
 const initialState: State = {
   posts: [],
-  breadcrumItems: [sampleData.locations.locationsHierarchy.map["c768ef20-01fe-4877-b670-9b6570be17be"]],
+  breadcrumItems: [renameProperty(sampleData.locations.locationsHierarchy, 'map', 'children')],
 }
 
 class App extends React.Component<{}, State> {
@@ -85,10 +82,8 @@ class App extends React.Component<{}, State> {
   }
 
   getChildren =(ob: any)=>{
-
     if(ob.children === undefined) return [];
-    let keys = Object.keys(ob.children);
-    return keys.map((item:any, index: number)=>{
+    return Object.keys(ob.children).map((item:any, index: number)=>{
       return ob.children[item];
     })
   }
@@ -96,6 +91,7 @@ class App extends React.Component<{}, State> {
   render() {
     return (
       <div className="App">
+
         <Breadcrumb>
           {
             this.state.breadcrumItems.map((item: any, index: number) => {
