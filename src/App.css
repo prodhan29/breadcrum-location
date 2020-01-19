@@ -20,3 +20,13 @@
 .App-link {
   color: #09d3ac;
 }
+
+ .custom-breadcrumb .breadcrumb {
+  background-color: white;
+}
+
+.dropdown-toggle-style {
+  background-color: white;
+	color: #2297d6;
+	border: 0px;
+}

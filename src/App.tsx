@@ -3,9 +3,8 @@ import sampleData from "./sample-data";
 import "./App.css";
 import {
 	State,
-	TBreadcrumItem,
 	ComponentProps,
-	SearchValue
+	Location,
 } from "./model/models";
 import {
 	Breadcrumb,
@@ -13,12 +12,11 @@ import {
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
-	DropdownItem
 } from "reactstrap";
 import Select from "react-select";
 
-const SearchApp = (props: any) => {
-	let options = props.childNodes.map((b: any) => {
+const SearchApp = (props: ComponentProps) => {
+	let options = props.childNodes.map((b: Location) => {
 		return {
 			label: b.label,
 			value: b
@@ -39,12 +37,12 @@ const SearchApp = (props: any) => {
 };
 
 let buttonDropdownStyle = {
-	backgroundColor: "#e9ecef",
-	color: "black",
+	backgroundColor: "white",
+	color: "#2297d6",
 	border: "0px"
 };
 
-const Dropdown = (props: any) => {
+const Dropdown = (props: ComponentProps) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -54,10 +52,7 @@ const Dropdown = (props: any) => {
 				{props.name}
 			</DropdownToggle>
 			<DropdownMenu style={{ width: "250px" }}>
-				<div>
-					{" "}
-					Change option <a href="#"> Country </a>{" "}
-				</div>
+				<div style={{paddingLeft: "8px"}}> Change option </div>
 				<SearchApp
 					{...props}
 					addBreadcrumItem={(item: any) => {
@@ -93,31 +88,33 @@ class App extends React.Component<{}, State> {
 		this.state = initialState;
 	}
 
-	addBreadcrumItem = (position: number, item: any): void => {
+	addBreadcrumItem = (position: number, item: Location): void => {
 		this.setState({
 			...this.state,
 			breadcrumItems: [...this.state.breadcrumItems.splice(0, ++position), item]
 		});
 	};
 
-	getChildren = (ob: any) => {
+	getChildren = (ob: Location) => {
 		if (ob.children === undefined) return [];
-		return Object.keys(ob.children).map((item: any, index: number) => {
-			return ob.children[item];
+		return Object.keys(ob.children).map((item: string, index: number) => {
+			return ob.children![item];
 		});
 	};
 
 	render() {
 		return (
 			<div className="App">
-				<Breadcrumb>
-					{this.state.breadcrumItems.map((item: any, index: number) => {
+				<Breadcrumb className = 'custom-breadcrumb'>
+					{this.state.breadcrumItems.map((item: Location, index: number) => {
+
+						console.log('breadcrumb item', item);
 						return (
 							<BreadcrumbItem key={index}>
 								<Dropdown
 									name={item.label}
 									childNodes={this.getChildren(item)}
-									addBreadcrumItem={(item: any) =>
+									addBreadcrumItem={(item: Location) =>
 										this.addBreadcrumItem(index, item)
 									}
 								/>
