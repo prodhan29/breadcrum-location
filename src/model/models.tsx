@@ -56,3 +56,36 @@ export interface ComponentProps {
 export interface SearchValue {
   [key: string]: string
 }
+
+
+/** A single node for location hierarchy */
+export interface LocationNode {
+  [key: string]: {
+      id: string;
+      label: string;
+      node: {
+          locationId: string;
+          name: string;
+          parentLocation?: {
+              locationId: string;
+              name: string;
+              voided: boolean;
+              parentLocation?: {
+                  locationId: string;
+                  name: string;
+                  voided: boolean;
+              };
+          };
+          tags: string[];
+          voided: boolean;
+      };
+      children?: LocationNode;
+  };
+}
+
+/** Interface for location object */
+export interface LocationHierarchy {
+  locationsHierarchy: {
+      map: LocationNode;
+  };
+}
