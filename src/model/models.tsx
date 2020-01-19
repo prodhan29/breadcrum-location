@@ -1,32 +1,7 @@
-export interface Post {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
-}
-
-export interface State {
-    posts: Post[];
-    breadcrumItems: any;
-}
-
-export interface Response {
-    config: any;
-    data: Post[];
-    headers: any;
-    request: any;
-    status: any;
-    statusText: any;
-}
-
 export interface ComponentProps {
     name?: string;
     childNodes: any;
     addBreadcrumItem(item: Location): any,
-}
-
-export interface SearchValue {
-    [key: string]: string;
 }
 
 export interface Location {
