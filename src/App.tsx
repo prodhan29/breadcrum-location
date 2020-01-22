@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import sampleData from "./sample-data";
 import "./App.css";
 import {
-	State,
 	ComponentProps,
 	Location,
 } from "./model/models";
@@ -15,57 +14,58 @@ import {
 } from "reactstrap";
 import Select from "react-select";
 
-const SearchApp = (props: ComponentProps) => {
-	let options = props.childNodes.map((b: Location) => {
-		return {
-			label: b.label,
-			value: b
-		};
-	});
-
-	return (
-		<div>
-			<Select
-				value={null}
-				autoFocus
-				menuIsOpen
-				onChange={(e: any) => props.addBreadcrumItem(e.value)}
-				options={options}
-			/>
-		</div>
-	);
-};
-
 let buttonDropdownStyle = {
 	backgroundColor: "white",
 	color: "#2297d6",
 	border: "0px"
 };
 
-const Dropdown = (props: ComponentProps) => {
-	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const toggle = () => setDropdownOpen(prevState => !prevState);
+class LocationDropdown extends React.Component<ComponentProps, any> {
 
-	return (
-		<ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+	constructor(props: any) {
+		super(props);
+		this.state = {
+			dropdownOpen: false
+		}
+	}
+
+	toggle=()=>{
+		const _state = this.state;
+		this.setState({..._state, dropdownOpen: !_state.dropdownOpen});
+	}
+
+	getOptions=()=>{
+		return this.props.childNodes.map((b: Location) => {
+			return {
+				label: b.label,
+				value: b
+			};
+		});
+	}
+
+	render() {
+		const props = this.props;
+		return (
+			<ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
 			<DropdownToggle caret style={buttonDropdownStyle}>
 				{props.name}
 			</DropdownToggle>
 			<DropdownMenu style={{ width: "250px" }}>
 				<div style={{paddingLeft: "8px"}}> Change option </div>
-				<SearchApp
-					{...props}
-					addBreadcrumItem={(item: any) => {
-						toggle();
-						props.addBreadcrumItem(item);
-					}}
-				/>
+				<Select
+					value={null}
+					autoFocus
+					menuIsOpen
+					onChange={(e: any) => {props.addBreadcrumItem(e.value); this.toggle()}}
+					options={this.getOptions()}
+			/>
 			</DropdownMenu>
 		</ButtonDropdown>
-	);
-};
+		)	
+	}
+}
 
-const renameProperty = (
+export const renameProperty = (
 	ob: any = {},
 	oldKey: string = "",
 	newKey: string = ""
@@ -75,14 +75,14 @@ const renameProperty = (
 	return ob;
 };
 
-const initialState: State = {
+const initialState = {
 	posts: [],
 	breadcrumItems: [
 		renameProperty(sampleData.locations.locationsHierarchy, "map", "children")
 	]
 };
 
-class App extends React.Component<{}, State> {
+class App extends React.Component<{}, any> {
 	constructor(props: {}) {
 		super(props);
 		this.state = initialState;
@@ -107,11 +107,9 @@ class App extends React.Component<{}, State> {
 			<div className="App">
 				<Breadcrumb className = 'custom-breadcrumb'>
 					{this.state.breadcrumItems.map((item: Location, index: number) => {
-
-						console.log('breadcrumb item', item);
 						return (
 							<BreadcrumbItem key={index}>
-								<Dropdown
+								<LocationDropdown
 									name={item.label}
 									childNodes={this.getChildren(item)}
 									addBreadcrumItem={(item: Location) =>
